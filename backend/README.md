@@ -85,6 +85,58 @@ Check out a few resources that may come in handy when working with NestJS:
 
 ## Support
 
+## CI (GitHub Actions) — exemplo
+
+Este workflow executa os testes (incluindo e2e) usando um serviço MySQL fornecido pelo runner. Crie `.github/workflows/ci.yml` com algo parecido:
+
+```yaml
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: catalogo
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd='mysqladmin ping --silent'
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Install dependencies
+        run: |
+          cd backend
+          npm ci
+      - name: Run tests
+        env:
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_USER: root
+          DB_PASS: root
+          DB_NAME: catalogo
+        run: |
+          cd backend
+          # aguarda o mysql estar pronto
+          npx wait-on tcp:3306
+          npm run test:e2e
+```
+
+Atenção: para CI mais robusto, considere usar um banco temporário por job, migrações e limpeza do schema entre execuções.
+
 Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
 
 ## Stay in touch

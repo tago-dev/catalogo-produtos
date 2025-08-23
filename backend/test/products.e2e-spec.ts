@@ -1,3 +1,4 @@
+process.env.NODE_ENV = process.env.NODE_ENV ?? 'test';
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as supertest from 'supertest';
@@ -14,7 +15,8 @@ describe('Products (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    await app.init();
+  app.useGlobalPipes(new (require('@nestjs/common').ValidationPipe)({ whitelist: true, transform: true }));
+  await app.init();
 
     dataSource = app.get(DataSource);
   });
@@ -48,5 +50,40 @@ describe('Products (e2e)', () => {
     expect(res.body.nome).toBe(body.nome);
     expect(Number(res.body.preco)).toBeCloseTo(body.preco);
     expect(Number(res.body.quantidade_em_stock)).toBe(body.quantidade_em_stock);
+  });
+
+  it('POST /products com preco negativo retorna 400', async () => {
+    const body = {
+      nome: 'Produto ruim',
+      preco: -10,
+      quantidade_em_stock: 1,
+    };
+
+    const res = await supertest.default(app.getHttpServer())
+      .post('/products')
+      .send(body)
+      .set('Accept', 'application/json');
+
+    expect(res.status).toBe(400);
+    expect(res.body).toBeDefined();
+    // deve conter mensagem de validação
+    expect(res.body.message).toBeDefined();
+  });
+
+  it('POST /products sem nome retorna 400', async () => {
+    const body = {
+      descricao: 'sem nome',
+      preco: 10,
+      quantidade_em_stock: 1,
+    };
+
+    const res = await supertest.default(app.getHttpServer())
+      .post('/products')
+      .send(body)
+      .set('Accept', 'application/json');
+
+    expect(res.status).toBe(400);
+    expect(res.body).toBeDefined();
+    expect(res.body.message).toBeDefined();
   });
 });
