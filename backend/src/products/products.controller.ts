@@ -14,6 +14,14 @@ export class ProductsController {
     return this.productsService.findAll();
   }
 
+  @Get('search')
+  getProductsByTerm(@Query('term') term?: string): Promise<Product[]> {
+    if (!term) {
+      return this.productsService.findAll();
+    }
+    return this.productsService.search(term);
+  }
+
   @Get(':id')
   getProduct(@Param('id') id: string): Promise<Product | null> {
     return this.productsService.findOne(id);
