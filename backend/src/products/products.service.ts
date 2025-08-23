@@ -21,7 +21,7 @@ export class ProductsService {
 
   search(term: string): Promise<Product[]> {
     return this.productsRepo.find({
-      where: { name: Like(`%${term}%`) },
+      where: { nome: Like(`%${term}%`) },
     });
   }
 }
