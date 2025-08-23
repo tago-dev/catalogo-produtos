@@ -8,25 +8,28 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
-export class CreateProductDto {
+export class UpdateProductDto {
+  @IsOptional()
   @IsString()
-  nome: string;
+  nome?: string;
 
   @IsOptional()
   @IsString()
   descricao?: string;
 
+  @IsOptional()
   @Type(() => Number)
   @IsNumber()
   @Min(0)
-  preco: number;
+  preco?: number;
 
   @IsOptional()
   @IsUrl()
   url_imagem?: string;
 
+  @IsOptional()
   @Type(() => Number)
   @IsInt()
   @Min(0)
-  quantidade_em_stock: number;
+  quantidade_em_stock?: number;
 }

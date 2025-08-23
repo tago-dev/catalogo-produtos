@@ -3,36 +3,21 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductsModule } from './products/products.module';
-
-// As configurações do banco agora são lidas via variáveis de ambiente com valores
-// padrão para facilitar desenvolvimento local. Valores esperados:
-//  DB_HOST, DB_PORT, DB_USER, DB_PASS, DB_NAME, TYPEORM_SYNC
+// using process.env directly to avoid extra peer-dependency on @nestjs/config
 
 @Module({
   imports: [
-    // Em ambiente de teste usamos um banco em memória (sqlite) para evitar
-    // dependência externa do MySQL e timeouts durante os hooks.
-    ...(process.env.NODE_ENV === 'test'
-      ? [
-          TypeOrmModule.forRoot({
-            type: 'sqlite',
-            database: ':memory:',
-            autoLoadEntities: true,
-            synchronize: true,
-          }),
-        ]
-      : [
-          TypeOrmModule.forRoot({
-            type: 'mysql',
-            host: process.env.DB_HOST,
-            port: Number(process.env.DB_PORT),
-            username: process.env.DB_USER,
-            password: process.env.DB_PASS,
-            database: process.env.DB_NAME,
-            autoLoadEntities: true,
-            synchronize: (process.env.TYPEORM_SYNC === 'true') || false,
-          }),
-        ]),
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: process.env.DB_HOST || 'localhost',
+      port: Number(process.env.DB_PORT) || 3306,
+      username: process.env.DB_USER || 'root',
+      password: process.env.DB_PASS || 'B3tt3g4',
+      database: process.env.DB_NAME || 'catalogo',
+      autoLoadEntities: true,
+      synchronize:
+        process.env.TYPEORM_SYNC === 'true' || process.env.NODE_ENV === 'test',
+    }),
     ProductsModule,
   ],
   controllers: [AppController],
