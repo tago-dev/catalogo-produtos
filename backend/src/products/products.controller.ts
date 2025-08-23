@@ -1,6 +1,7 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query, Post, Body } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { Product } from './product.entity';
+import { CreateProductDto } from './dto/create-product.dto';
 
 @Controller('products')
 export class ProductsController {
@@ -25,6 +26,11 @@ export class ProductsController {
   @Get(':id')
   getProduct(@Param('id') id: string): Promise<Product | null> {
     return this.productsService.findOne(id);
+  }
+
+  @Post()
+  createProduct(@Body() body: CreateProductDto): Promise<Product> {
+    return this.productsService.create(body);
   }
 
 }
