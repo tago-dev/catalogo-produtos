@@ -1,40 +1,27 @@
-# Node.js
+# Node/TypeScript
 node_modules/
+dist/
+build/
+.tmp/
+.temp/
+.cache/
+coverage/
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-package-lock.json
-yarn.lock
-.pnpm-debug.log
 
-# Build
-dist/
-build/
-.cache/
-.tmp/
-
-# Environment
+# Envs
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*
+!.env.example
 
-# IDEs
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# Logs
-logs
-*.log
-lerna-debug.log
-
-# OS
+# Editors/OS
 .DS_Store
 Thumbs.db
+.vscode/
+.idea/
 
 # Docker
-docker-compose.override.yml
+docker-data/
