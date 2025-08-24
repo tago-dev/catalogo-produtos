@@ -63,59 +63,51 @@ export default function ProductList() {
     };
 
     return (
-        <div className="p-6">
-            {/* Barra de busca */}
-            <form onSubmit={handleSearch} className="flex gap-2 mb-6">
-                <input
-                    type="text"
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    placeholder="Buscar produto..."
-                    className="border rounded px-3 py-2 w-full"
-                />
-                <button
-                    type="submit"
-                    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-                >
-                    Buscar
-                </button>
-            </form>
+        <div className="page">
+            <div className="container">
+                {/* Barra de busca */}
+                <form onSubmit={handleSearch} className="search-bar">
+                    <input
+                        type="text"
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        placeholder="Buscar produto..."
+                        className="search-input"
+                    />
+                    <button type="submit" className="btn-primary">Buscar</button>
+                </form>
 
-            {/* Lista de produtos */}
-            {error && <p className="text-red-600 mb-4">{error}</p>}
-            {loading ? (
-                <p className="text-gray-600">Carregando...</p>
-            ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {products.length > 0 ? (
-                        products.map((p) => (
-                            <div key={p.id} className="border rounded-lg p-4 shadow-md flex flex-col">
-                                <img src={p.url_imagem} alt={p.nome} className="w-full h-40 object-cover rounded" />
-                                <div className="mt-2 flex-1">
-                                    <h2 className="text-lg font-bold">{p.nome}</h2>
-                                    <p className="text-gray-600 text-sm mt-1">{p.descricao}</p>
-                                </div>
-                                <div className="mt-2 flex items-center justify-between">
-                                    <p className="text-blue-600 font-semibold">R$ {formatPrice(p.preco)}</p>
-                                    <div className="flex gap-2">
-                                        <Link to={`/products/${p.id}`} className="text-sm text-blue-500 hover:underline">
-                                            Ver
-                                        </Link>
-                                        <button
-                                            onClick={() => handleDelete(p.id)}
-                                            className="text-sm text-red-500 hover:underline"
-                                        >
-                                            Excluir
-                                        </button>
+                {/* Lista de produtos */}
+                {error && <p className="error-msg">{error}</p>}
+                {loading ? (
+                    <p className="muted">Carregando...</p>
+                ) : (
+                    <div className="product-grid">
+                        {products.length > 0 ? (
+                            products.map((p) => (
+                                <article key={p.id} className="product-card">
+                                    <img src={p.url_imagem} alt={p.nome} />
+                                    <div className="product-card-body">
+                                        <div>
+                                            <h2>{p.nome}</h2>
+                                            <p className="muted">{p.descricao}</p>
+                                        </div>
+                                        <div className="product-actions">
+                                            <strong>R$ {formatPrice(p.preco)}</strong>
+                                            <div>
+                                                <Link to={`/products/${p.id}`} className="nav-link">Ver</Link>
+                                                <button onClick={() => handleDelete(p.id)} className="nav-link" style={{ color: 'crimson' }}>Excluir</button>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                        ))
-                    ) : (
-                        <p className="text-gray-500 col-span-3">Nenhum produto encontrado</p>
-                    )}
-                </div>
-            )}
+                                </article>
+                            ))
+                        ) : (
+                            <p className="muted">Nenhum produto encontrado</p>
+                        )}
+                    </div>
+                )}
+            </div>
         </div>
     );
 }
