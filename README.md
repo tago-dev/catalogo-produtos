@@ -1,5 +1,7 @@
 # Catálogo de Produtos — Desafio Full Stack
 
+[![CI](https://github.com/tago-dev/catalogo-produtos/actions/workflows/ci.yml/badge.svg)](https://github.com/tago-dev/catalogo-produtos/actions/workflows/ci.yml)
+
 Aplicação full stack para gestão de produtos com frontend em React, backend em NestJS e banco MySQL, empacotada com Docker Compose. Este README reúne tudo que você precisa para instalar, rodar, testar e entender o projeto.
 
 ## Sumário
@@ -13,6 +15,7 @@ Aplicação full stack para gestão de produtos com frontend em React, backend e
 - Endpoints da API
 - Banco de dados e migrações
 - Testes
+ - Integração Contínua (CI)
 - Estrutura do repositório
 - Decisões e trade-offs
 - Troubleshooting
@@ -169,6 +172,15 @@ npm run test:e2e     # e2e (exige MySQL acessível conforme env)
 ```
 
 Sugestão de CI: executar lint, build e testes (há um exemplo de workflow no `backend/README.md`).
+
+## Integração Contínua (CI)
+
+Há um workflow do GitHub Actions em `.github/workflows/ci.yml` que executa automaticamente em push e PR para `main`:
+
+- Backend: instala deps, sobe MySQL de serviço, roda testes unitários e e2e com `NODE_ENV=test`.
+- Frontend: instala deps, faz build e executa testes (modo CI).
+
+Você pode acompanhar as execuções e logs na aba Actions do repositório ou clicando no badge de status acima.
 
 ## Estrutura do repositório
 
