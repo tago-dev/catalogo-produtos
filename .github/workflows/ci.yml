@@ -1,0 +1,90 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  backend-tests:
+    name: Backend (unit + e2e)
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8
+        env:
+          MYSQL_ROOT_PASSWORD: example
+          MYSQL_DATABASE: catalogo
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -pexample"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Install deps (backend)
+        run: |
+          cd backend
+          npm ci
+      - name: Wait for MySQL
+        run: |
+          for i in {1..30}; do
+            (echo > /dev/tcp/127.0.0.1/3306) >/dev/null 2>&1 && echo "MySQL up" && break
+            echo "Waiting MySQL..."; sleep 2
+          done
+      - name: Run unit tests
+        env:
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_USER: root
+          DB_PASS: example
+          DB_NAME: catalogo
+          API_KEY: supersecret
+          NODE_ENV: test
+        run: |
+          cd backend
+          npm test --silent
+      - name: Run e2e tests
+        env:
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_USER: root
+          DB_PASS: example
+          DB_NAME: catalogo
+          API_KEY: supersecret
+          NODE_ENV: test
+        run: |
+          cd backend
+          npm run test:e2e --silent
+
+  frontend-build-test:
+    name: Frontend (build + tests)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Install deps (frontend)
+        run: |
+          cd frontend
+          npm ci
+      - name: Build
+        env:
+          REACT_APP_API_URL: "http://localhost:3001" # não usado em prod docker local
+          REACT_APP_API_KEY: "supersecret"
+        run: |
+          cd frontend
+          npm run build --silent
+      - name: Run tests
+        env:
+          CI: true
+        run: |
+          cd frontend
+          npm test -- --watchAll=false --silent
