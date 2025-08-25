@@ -2,8 +2,9 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import App from './App';
 
-test('renders learn react link', () => {
+test('renderiza o header com links principais', () => {
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+  expect(screen.getByText(/Catálogo/i)).toBeInTheDocument();
+  expect(screen.getByRole('link', { name: /Produtos/i })).toBeInTheDocument();
+  expect(screen.getByRole('link', { name: /Dashboard/i })).toBeInTheDocument();
 });
