@@ -15,7 +15,7 @@ Aplicação full stack para gestão de produtos com frontend em React, backend e
 - Endpoints da API
 - Banco de dados e migrações
 - Testes
- - Integração Contínua (CI)
+- Integração Contínua (CI)
 - Estrutura do repositório
 - Decisões e trade-offs
 - Troubleshooting
