@@ -1,0 +1,54 @@
+version: "3.9"
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: catalogo-db
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: catalogo
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./backend/mysql/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-pexample"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: catalogo-backend
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASS: example
+      DB_NAME: catalogo
+      TYPEORM_SYNC: "false"
+      API_KEY: supersecret
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "3001:3001"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        REACT_APP_API_URL: ""
+        REACT_APP_API_KEY: "supersecret"
+    container_name: catalogo-frontend
+    depends_on:
+      - backend
+    ports:
+      - "3000:80"
+
+volumes:
+  db_data:

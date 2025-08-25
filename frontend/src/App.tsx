@@ -7,14 +7,16 @@ import Header from "./components/Header";
 function App() {
   return (
     <Router>
-      <Header />
-      <main className="container">
-        <Routes>
-          <Route path="/" element={<ProductList />} />
-          <Route path="/products/:id" element={<ProductDetails />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-        </Routes>
-      </main>
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <main>
+          <Routes>
+            <Route path="/" element={<ProductList />} />
+            <Route path="/products/:id" element={<ProductDetails />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+          </Routes>
+        </main>
+      </div>
     </Router>
   );
 }
