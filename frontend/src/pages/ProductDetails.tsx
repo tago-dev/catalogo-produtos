@@ -71,8 +71,7 @@ export default function ProductDetails() {
     }
 
     return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            {/* Breadcrumb */}
+        <div className="container-wide">
             <nav className="mb-8">
                 <Link to="/" className="text-primary" style={{ textDecoration: 'none', fontWeight: 600 }}>
                     ← Voltar para produtos
@@ -80,9 +79,8 @@ export default function ProductDetails() {
             </nav>
 
             <div className="lg:grid lg:grid-cols-2 lg:gap-12 lg:items-start">
-                {/* Product Image */}
                 <div className="mb-8 lg:mb-0">
-                    <div className="rounded-xl overflow-hidden" style={{ background: '#e5e7eb' }}>
+                    <div className="rounded-xl overflow-hidden img-skeleton">
                         <img
                             src={product.url_imagem}
                             alt={product.nome}
@@ -94,7 +92,6 @@ export default function ProductDetails() {
                     </div>
                 </div>
 
-                {/* Product Info */}
                 <div className="lg:pt-8">
                     <div className="mb-6">
                         <h1 className="text-3xl font-bold mb-4">
@@ -105,25 +102,23 @@ export default function ProductDetails() {
                             R$ {formatPrice(product.preco)}
                         </div>
 
-                        {/* Stock Status */}
                         <div className="mb-6">
                             {product.quantidade_em_stock > 0 ? (
-                                <div className="flex items-center">
-                                    <div className="h-2 w-2 rounded-full" style={{ background: '#16a34a', width: 8, height: 8, marginRight: 8 }}></div>
+                                <div className="flex items-center gap-2">
+                                    <div className="dot dot-green"></div>
                                     <span className="text-success font-medium">
                                         Em estoque ({product.quantidade_em_stock} unidades)
                                     </span>
                                 </div>
                             ) : (
-                                <div className="flex items-center">
-                                    <div className="h-2 w-2 rounded-full" style={{ background: '#dc2626', width: 8, height: 8, marginRight: 8 }}></div>
+                                <div className="flex items-center gap-2">
+                                    <div className="dot dot-red"></div>
                                     <span className="text-danger font-medium">Fora de estoque</span>
                                 </div>
                             )}
                         </div>
                     </div>
 
-                    {/* Description */}
                     {product.descricao && (
                         <div className="mb-8">
                             <h2 className="text-lg font-semibold mb-3">Descrição</h2>
@@ -133,8 +128,7 @@ export default function ProductDetails() {
                         </div>
                     )}
 
-                    {/* Product Details Card */}
-                    <div className="card p-6" style={{ background: '#f9fafb' }}>
+                    <div className="card p-6 bg-gray-50">
                         <h3 className="text-lg font-semibold mb-4">Detalhes do Produto</h3>
                         <dl className="space-y-3">
                             <div className="flex justify-between">

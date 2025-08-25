@@ -35,7 +35,6 @@ export default function Dashboard() {
             .then(() => {
                 setMessage('Produto criado com sucesso!');
                 setMessageType('success');
-                // reset form
                 setNome('');
                 setDescricao('');
                 setPreco('');
@@ -51,8 +50,7 @@ export default function Dashboard() {
     };
 
     return (
-        <div className="container" style={{ maxWidth: 960 }}>
-            {/* Header */}
+        <div className="container container-narrow">
             <div className="mb-8">
                 <div className="flex items-center justify-between">
                     <div>
@@ -68,14 +66,10 @@ export default function Dashboard() {
                 </div>
             </div>
 
-            {/* Message */}
             {message && (
-                <div className="mb-6 card" style={{ padding: 16, background: messageType === 'success' ? '#ecfdf5' : '#fef2f2', borderColor: messageType === 'success' ? '#a7f3d0' : '#fecaca' }}>
-                    <p className="text-sm" style={{ color: messageType === 'success' ? '#065f46' : '#991b1b' }}>{message}</p>
-                </div>
+                <div className={`mb-6 alert ${messageType === 'success' ? 'alert-success' : 'alert-error'}`}>{message}</div>
             )}
 
-            {/* Form Card */}
             <div className="card overflow-hidden">
                 <div className="px-6 py-4 border-b">
                     <h2 className="text-lg font-semibold">Novo Produto</h2>
@@ -83,7 +77,6 @@ export default function Dashboard() {
 
                 <form onSubmit={handleSubmit} className="p-6">
                     <div className="grid grid-cols-1 sm:grid-cols-2 grid-gap-6">
-                        {/* Nome */}
                         <div className="sm:col-span-2">
                             <label htmlFor="nome" className="label">
                                 Nome do Produto *
@@ -99,12 +92,11 @@ export default function Dashboard() {
                             />
                         </div>
 
-                        {/* Preço */}
                         <div>
                             <label htmlFor="preco" className="label">
                                 Preço *
                             </label>
-                            <div style={{ position: 'relative' }}>
+                            <div className="relative">
                                 <div className="input-prefix">
                                     <span>R$</span>
                                 </div>
@@ -120,7 +112,6 @@ export default function Dashboard() {
                             </div>
                         </div>
 
-                        {/* Quantidade */}
                         <div>
                             <label htmlFor="quantidade" className="label">
                                 Quantidade em Estoque *
@@ -136,7 +127,6 @@ export default function Dashboard() {
                             />
                         </div>
 
-                        {/* URL da Imagem */}
                         <div className="sm:col-span-2">
                             <label htmlFor="urlImagem" className="label">
                                 URL da Imagem
@@ -164,7 +154,6 @@ export default function Dashboard() {
                             )}
                         </div>
 
-                        {/* Descrição */}
                         <div className="sm:col-span-2">
                             <label htmlFor="descricao" className="label">
                                 Descrição
@@ -180,7 +169,6 @@ export default function Dashboard() {
                         </div>
                     </div>
 
-                    {/* Submit Button */}
                     <div className="mt-6 flex justify-end">
                         <button
                             type="submit"
@@ -189,7 +177,7 @@ export default function Dashboard() {
                         >
                             {loading ? (
                                 <>
-                                    <svg className="-ml-1 mr-3" style={{ width: 20, height: 20 }} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <svg className="btn-icon-sm" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                     </svg>

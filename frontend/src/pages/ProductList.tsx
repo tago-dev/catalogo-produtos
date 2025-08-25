@@ -32,18 +32,13 @@ export default function ProductList() {
     };
 
     useEffect(() => {
-
         fetchProducts();
     }, []);
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!search) {
-            // empty search -> reload all
-            fetchProducts();
-            return;
-        }
+        if (!search) { fetchProducts(); return; }
 
         try {
             const options = {
@@ -53,12 +48,8 @@ export default function ProductList() {
             };
             const fuse = new Fuse(products, options);
             const results: Array<{ item: Product }> = fuse.search(search) as any;
-            if (results.length > 0) {
-                setProducts(results.map((r) => r.item));
-            } else {
-
-                fetchProducts(search);
-            }
+            if (results.length > 0) setProducts(results.map((r) => r.item));
+            else fetchProducts(search);
         } catch (err) {
             console.error('Fuzzy search failed', err);
             fetchProducts(search);
@@ -70,10 +61,7 @@ export default function ProductList() {
         setLoading(true);
         api
             .delete(`/products/${id}`)
-            .then(() => {
-                // refresh
-                fetchProducts(search || undefined);
-            })
+            .then(() => { fetchProducts(search || undefined); })
             .catch((err) => {
                 console.error(err);
                 setError('Falha ao excluir o produto.');
@@ -90,15 +78,13 @@ export default function ProductList() {
 
     return (
         <div className="container-wide">
-            {/* Header Section */}
             <div className="mb-8">
                 <h1 className="h1">Produtos</h1>
                 <p className="lead">Explore nossa coleção de produtos</p>
             </div>
 
-            {/* Search Bar */}
             <div className="mb-8">
-                <form onSubmit={handleSearch} className="flex gap-3" style={{ maxWidth: 480 }}>
+                <form onSubmit={handleSearch} className="flex gap-3 search-bar">
                     <input
                         type="text"
                         value={search}
@@ -116,27 +102,21 @@ export default function ProductList() {
                 </form>
             </div>
 
-            {/* Error Message */}
             {error && (
-                <div className="mb-6 card" style={{ padding: 16, borderColor: '#fecaca', background: '#fef2f2' }}>
-                    <p className="text-danger text-sm">{error}</p>
-                </div>
+                <div className="mb-6 alert alert-error">{error}</div>
             )}
 
-            {/* Loading State */}
             {loading && !error ? (
                 <div className="flex justify-center items-center py-8">
                     <div className="spinner" />
                     <span className="ml-3 text-muted" style={{ marginLeft: 12 }}>Carregando produtos...</span>
                 </div>
             ) : (
-                /* Products Grid */
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 grid-gap-6">
                     {products.length > 0 ? (
                         products.map((p) => (
-                            <article key={p.id} className="card hover:shadow-lg transition">
-                                {/* Product Image */}
-                                <div style={{ background: '#e5e7eb' }}>
+                            <article key={p.id} className="card hover:shadow-lg transition-transform">
+                                <div className="img-skeleton">
                                     <img
                                         src={p.url_imagem}
                                         alt={p.nome}
@@ -147,7 +127,6 @@ export default function ProductList() {
                                     />
                                 </div>
 
-                                {/* Product Info */}
                                 <div className="p-5">
                                     <div className="mb-4">
                                         <h3 className="text-lg font-semibold mb-2">
@@ -158,21 +137,19 @@ export default function ProductList() {
                                         </p>
                                     </div>
 
-                                    {/* Price and Stock */}
                                     <div className="mb-4">
                                         <div className="text-2xl font-bold text-primary mb-1">
                                             R$ {formatPrice(p.preco)}
                                         </div>
                                         <div className="text-sm text-muted">
                                             {p.quantidade_em_stock > 0 ? (
-                                                <span className="text-success">Em estoque ({p.quantidade_em_stock})</span>
+                                                <span className="badge badge-success">Em estoque ({p.quantidade_em_stock})</span>
                                             ) : (
-                                                <span className="text-danger">Fora de estoque</span>
+                                                <span className="badge badge-danger">Fora de estoque</span>
                                             )}
                                         </div>
                                     </div>
 
-                                    {/* Actions */}
                                     <div className="flex gap-2">
                                         <Link
                                             to={`/products/${p.id}`}
@@ -191,8 +168,8 @@ export default function ProductList() {
                             </article>
                         ))
                     ) : (
-                        <div className="text-center" style={{ gridColumn: '1/-1', padding: '48px 0' }}>
-                            <div className="mb-4" style={{ color: '#9ca3af' }}>
+                        <div className="empty-state grid-span-all">
+                            <div className="mb-4">
                                 <svg className="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2 2v-5m16 0h-2M4 13h2m0 0v-3a2 2 0 012-2h8a2 2 0 012 2v3" />
                                 </svg>
